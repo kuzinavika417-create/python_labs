@@ -20,3 +20,38 @@ print(f"sum = {summa:.2f}; avg = {avg:.2f}")
 ```
 ![alt text](images/ex02.png)
 
+## Задание 3
+``` price = float (input("Цена:"))
+discount = float (input("скидка %:"))
+vat =float (input("НДС%:"))
+
+base = price * (1 - (discount / 100))
+vat_amount = base*(vat / 100)
+total = base + vat_amount
+
+print(f"База после скидки:{base}")
+print(f"НДС:{vat_amount}")
+print(f"Итого к оплате:{total}")
+```
+![alt text](images/ex03.png)
+## Задание 4
+```
+m = int(input("Минуты :"))
+hour = m // 60
+minute = m % 60
+print(f"{hour}:{minute:02d}")
+```
+![alt text](images/ex04.png)
+
+## Задание 5
+``` 
+inicials = input("ФИО: ")
+inicials_clear = " ".join(inicials.split())
+words = inicials_clear.split()
+iniciali = "".join([word[0].upper() for word in words]) + "."
+print(f"ФИО: {inicials}")
+print(f"Инициалы: {iniciali}")
+print(f"Длина (символов) : {len(inicials_clear)}")
+
+```
+![alt text](images/ex05.png)
