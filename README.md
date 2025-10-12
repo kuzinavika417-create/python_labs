@@ -92,14 +92,14 @@ for num in nums:
 ```
 nums = [[[1, 2], [3, 4]],([1, 2], (3, 4, 5)),[[1], [], [2, 3]],[[1, 2], "ab"]]
 def flatten(nums):
-    r = []
+    exit_material = []
     for i  in nums:
         if type(i) != str:
             for j in i :
-                r.append(j)
+                exit_material.append(j)
         else:
             return 'TypeError'
-    return r
+    return exit_material
 for i in nums:
      print(f'{i} -> {flatten(i)}')
 ```
