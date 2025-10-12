@@ -64,6 +64,7 @@ print(f"Длина (символов) : {len(inicials_clear)}")
 
 # Лабораторная работа 2
 ## Задание 1
+### max_min
 ```
 nums = [[3, -1, 5, 5, 0],[42],[-5, -2, -9],[],[1.5, 2, 2.0, -3.1]]
 def min_max(nums):
@@ -75,3 +76,31 @@ for i in nums:
     print(f'{i} -> {min_max(i)}')
  ```
 ![alt text](images/lab02/ex01.png)
+
+### unique_sorted
+```
+nums = [[3, 1, 2, 1, 3],[],[-1, -1, 0, 2, 2],[1.0, 1, 2.5, 2.5, 0]]
+def unique_sorted(nums):
+    if not nums:
+        return []
+    return sorted(set(nums))
+for num in nums:
+    print(f'{num} -> {unique_sorted(num)}')
+```
+![alt text](images/lab02/ex02.png)
+### flatten
+```
+nums = [[[1, 2], [3, 4]],([1, 2], (3, 4, 5)),[[1], [], [2, 3]],[[1, 2], "ab"]]
+def flatten(nums):
+    r = []
+    for i  in nums:
+        if type(i) != str:
+            for j in i :
+                r.append(j)
+        else:
+            return 'TypeError'
+    return r
+for i in nums:
+     print(f'{i} -> {flatten(i)}')
+```
+![alt text](images/lab02/ex03.png)
