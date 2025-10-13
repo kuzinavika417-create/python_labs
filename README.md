@@ -167,3 +167,26 @@ print(col_sums([[0, 0], [0, 0]]))
 print(col_sums([[1, 2], [3]])) 
 ```
 ![alt text](images/lab02/ex06.png)
+# Лабораторная работа 3
+## Задание А
+### normalize 
+```
+def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
+    if not text:
+        return ''
+    for i in '\t\r\n\v\f':
+        text = text.replace(i,' ')
+    while '  ' in text:
+        text = text.replace('  ', ' ')
+    text = text.strip()
+    if yo2e:
+        text = text.replace('ё', 'е').replace('Ё', 'Е')
+    if casefold:
+        text.casefold()
+    return text
+print('"ПрИвЕт\nМИр\t"', normalize("ПрИвЕт\nМИр\t").casefold())
+print('"ёжик, Ёлка"', normalize("ёжик, Ёлка"))
+print('"Hello\r\nWorld"', normalize("Hello\r\nWorld"))
+print('"  двойные   пробелы  "', normalize("  двойные   пробелы  "))
+```
+![alt text](images\lab03\ex01.png)
