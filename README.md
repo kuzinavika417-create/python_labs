@@ -169,7 +169,7 @@ print(col_sums([[1, 2], [3]]))
 ![alt text](images/lab02/ex06.png)
 # Лабораторная работа 3
 ## Задание А
-### normalize 
+### normalize и tokenize
 ```
 def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
     if not text:
@@ -185,13 +185,59 @@ def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
         text.casefold()
     return text
 
-test = "ПрИвЕт\nМИр\t"
-test1 = "ёжик, Ёлка"
-test2 = "Hello\r\nWorld"
-test3 = "  двойные   пробелы  "
-print(f"{repr(test)}, {repr(normalize(test).casefold())}")
-print(f'{repr(test1)}, {normalize(test1)}')
-print(f'{repr(test2)}, {normalize(test2)}')
-print(f'{repr(test3)}, {normalize(test3)}')
+def tokenize(text: str) -> list[str]:
+    text = normalize(text, casefold=False, yo2e=False)
+    words = []
+    results = []
+    for i in text:
+        if i.isalnum() or i == '_' or i == '-' in words:
+            words.append(i)
+        elif words:
+            results.append(''.join(words))
+            words = []
+    if words:
+        results.append(''.join(words))
+    return results            
+        
+
+test_normalize = "ПрИвЕт\nМИр\t"
+test1_normalize = "ёжик, Ёлка"
+test2_normalize = "Hello\r\nWorld"
+test3_normalize = "  двойные   пробелы  "
+test_tokenize = "привет мир"
+test2_tokenize = "hello,world!!!"
+test3_tokenize = "по-настоящему круто"
+test4_tokenize = "2025 год"
+test5_tokenize = "emoji 😀 не слово"
+print('тест кейсы для normalize:')
+print(f"{repr(test_normalize)}, {repr(normalize(test_normalize).casefold())}")
+print(f'{repr(test1_normalize)}, {normalize(test1_normalize)}')
+print(f'{repr(test2_normalize)}, {normalize(test2_normalize)}')
+print(f'{repr(test3_normalize)}, {normalize(test3_normalize)}')
+
+print('тест кейсы для tokenize')
+print(f"{repr(test_tokenize)}, {repr(tokenize(test_tokenize))}")
+print(f"{repr(test2_tokenize)}, {repr(tokenize(test2_tokenize))}")
+print(f"{repr(test3_tokenize)}, {repr(tokenize(test3_tokenize))}")
+print(f"{repr(test4_tokenize)}, {repr(tokenize(test4_tokenize))}")
+print(f"{repr(test5_tokenize)}, {repr(tokenize(test5_tokenize))}")
 ```
-![alt text](images\lab03\ex01.png)
+![alt text](images/lab03/ex01.png)
+### count_freq + top_n
+```
+def count_freq(tokens: list[str]) -> dict[str, int]:
+    alf = list(sorted(set(tokens)))
+    f = {}
+    for i in alf:
+        f[i] = tokens.count(i)
+    return f
+def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
+    sort = sorted(freq.items(), key=lambda i: (-i[1], i[0]))
+    return sort[:n]
+test = 'Токены ["a","b","a","c","b","a"] → частоты {"a":3,"b":2,"c":1};'
+test2 = 'токены ["bb","aa","bb","aa","cc"] → частоты {"aa":2,"bb":2,"cc":1}'
+print('тест кейсы для count_freq + top_n')
+print(f'{repr(test)}; {count_freq(["a","b","a","c","b","a"])} -> {top_n({"a":3,"b":2,"c":1})}')
+print(f'{repr(test2)}; {count_freq(["bb","aa","bb","aa","cc"])} -> {top_n({"aa":2,"bb":2,"cc":1})}')
+```
+![alt text](images/lab03/ex02.png)
