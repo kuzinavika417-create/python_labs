@@ -184,9 +184,14 @@ def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
     if casefold:
         text.casefold()
     return text
-print('"ПрИвЕт\nМИр\t"', normalize("ПрИвЕт\nМИр\t").casefold())
-print('"ёжик, Ёлка"', normalize("ёжик, Ёлка"))
-print('"Hello\r\nWorld"', normalize("Hello\r\nWorld"))
-print('"  двойные   пробелы  "', normalize("  двойные   пробелы  "))
+
+test = "ПрИвЕт\nМИр\t"
+test1 = "ёжик, Ёлка"
+test2 = "Hello\r\nWorld"
+test3 = "  двойные   пробелы  "
+print(f"{repr(test)}, {repr(normalize(test).casefold())}")
+print(f'{repr(test1)}, {normalize(test1)}')
+print(f'{repr(test2)}, {normalize(test2)}')
+print(f'{repr(test3)}, {normalize(test3)}')
 ```
 ![alt text](images\lab03\ex01.png)
