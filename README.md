@@ -261,3 +261,92 @@ for i in top:
     print(f'{i[0]} : {i[1]}')
 ```
 ![alt text](images/lab03/ex03.png)
+
+# Лабораторная работа 4
+## Задание А
+```
+import csv
+from pathlib import Path
+def read_text(path: str | Path, encoding: str = "utf-8") -> str:
+    with open(path, 'r', encoding=encoding) as f:
+        return f.read()
+
+def write_csv(rows: list[tuple | list], path: str | Path, header: tuple[str, ...] | None = None) -> None:
+    if rows and len(set(len(row) for row in rows)) != 1:
+        return ValueError
+    
+    with open(path, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        if header:
+            writer.writerow(header)
+        writer.writerows(rows)
+
+if __name__ == "__main__":
+    try:
+        txt = read_text('src\lab01\lab04\data\input.txt')
+        print(f"Прочитано: {txt}")
+    except FileNotFoundError:
+        print("Файл src\lab01\lab04\data\input.txt не найден")
+    
+    write_csv([("word", "count"), ("test", 3)], "src\lab01\lab04\data\check.csv")  
+    print("файл csv создан!")
+```
+на выходе мы получаем файл csv и :
+![alt text](images/lab04/ex01.png)
+
+## Задание В
+```
+import sys
+import os
+import csv
+from collections import Counter
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+
+try:
+    from lib.text import normalize, tokenize
+except ImportError as e:
+    sys.exit(f"Ошибка импорта: {e}")
+
+def main():
+    input_file = 'src\lab01\lab04\data\input.txt'
+    output_file = 'src\lab01\lab04\data\check.csv'
+
+    try:
+        with open(input_file, 'r', encoding='utf-8') as f:
+            text = f.read()
+        if not text.strip():
+            sys.exit("Файл пустой")
+    except Exception as e:
+        sys.exit(f"Ошибка чтения {input_file}: {e}")
+    
+    try:
+        normalized = normalize(text)
+        words = tokenize(normalized)
+        if not words:
+            sys.exit("После обработки слов не найдено")
+        word_freq = Counter(words)
+    except Exception as e:
+        sys.exit(f"Ошибка обработки текста: {e}")
+
+
+    try:
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        with open(output_file, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['word', 'count'])
+            for word, count in sorted(word_freq.items(), key=lambda x: (-x[1], x[0])):
+                writer.writerow([word, count])
+    except Exception as e:
+        sys.exit(f"Ошибка сохранения {output_file}: {e}")
+    
+    top5 = sorted(word_freq.items(), key=lambda x: (-x[1], x[0]))[:5]
+    print(f"Всего слов: {len(words)}")
+    print(f"Уникальных слов: {len(word_freq)}")
+    print("Топ-5:", ', '.join(f"'{w}'({c})" for w, c in top5))
+
+if __name__ == "__main__":
+    main()
+```
+![alt text](images\lab04\ex02.png)
+
