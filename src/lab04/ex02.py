@@ -12,7 +12,7 @@ except ImportError as e:
 
 def main():
     input_file = 'src\lab04\data\input.txt'
-    output_file = 'src\lab04\data\check.csv'
+    output_file = 'src\lab04\data\check.json'
 
     try:
         with open(input_file, 'r', encoding='utf-8') as f:
