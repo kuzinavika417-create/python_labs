@@ -343,7 +343,7 @@ def main():
     top5 = sorted(word_freq.items(), key=lambda x: (-x[1], x[0]))[:5]
     print(f"Всего слов: {len(words)}")
     print(f"Уникальных слов: {len(word_freq)}")
-    print("Топ-5:", ', '.join(f"'{w}'({c})" for w, c in top5))
+    print("Чаще всего повторяются:", ', '.join(f"'{w}'({c})" for w, c in top5))
 
 if __name__ == "__main__":
     main()
