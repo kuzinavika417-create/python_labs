@@ -11,8 +11,8 @@ except ImportError as e:
     sys.exit(f"Ошибка импорта: {e}")
 
 def main():
-    input_file = 'src\lab01\lab04\data\input.txt'
-    output_file = 'src\lab01\lab04\data\check.csv'
+    input_file = 'src\lab04\data\input.txt'
+    output_file = 'src\lab04\data\check.csv'
 
     try:
         with open(input_file, 'r', encoding='utf-8') as f:
