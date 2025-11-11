@@ -2,6 +2,8 @@ import csv
 from pathlib import Path
 import openpyxl
 from openpyxl.utils import get_column_letter
+from openpyxl import Workbook
+import csv
 
 def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     """
@@ -52,9 +54,6 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         work.save(xlsx_path)
     except Exception as ex:
         raise ValueError(f"Ошибка при создании XLSX файла: {ex}")
-    
-from openpyxl import Workbook
-import csv
 
 wb = Workbook()
 ws = wb.active
