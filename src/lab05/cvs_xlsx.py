@@ -67,3 +67,4 @@ with open("src/data/samples/people.csv", encoding="utf-8") as f:
         ws.append(row)      
 
 wb.save("src/data/out/people.xlsx")  
+csv_to_xlsx("src/data/samples/people.csv", "src/data/out/people.xlsx")
