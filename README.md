@@ -350,3 +350,182 @@ if __name__ == "__main__":
 ```
 ![alt text](images\lab04\ex02.png)
 
+# Лабораторная работа 5
+## Задание A — JSON ↔ CSV
+### код для задания с примером 1. JSON чтение и запись, примером 2. Работа с CSV
+```
+import json
+import csv
+from pathlib import Path
+
+def json_to_csv(json_path: str, csv_path: str) -> None:
+    """
+    Преобразует JSON-файл в CSV.
+    Поддерживает список словарей [{...}, {...}], заполняет отсутствующие поля пустыми строками.
+    Кодировка UTF-8. Порядок колонок — алфавитный.
+    """
+    json_file = Path(json_path)
+    with open(json_path, 'r', encoding='utf-8') as json_file : # кодировка UTF-8
+        data = json.load(json_file)
+    if not json_file.exists():
+        raise FileNotFoundError(f"JSON файл отсутствует")
+    if not isinstance(data,list):
+        raise ValueError('Неверный тип данных')
+    if len(data) == 0:
+        raise ValueError('Пустой файл JSON')
+    all = set()
+    for i in data:
+        if not isinstance(i,dict):
+            raise ValueError('Элементы должны быть словарями')
+        all.add(i.keys)
+    col = sorted(all)
+    
+    try:
+        with open(csv_path, 'w', encoding='utf-8', newline='') as csv_file:
+            csv_file = csv.DictWriter(csv_file, fieldnames=col)
+            csv_file.writeheader()
+            for i in data:
+                row = {r: i.get(r,'') for r in col}
+                csv_file.writerow(row)
+    except Exception as ex:
+        raise ValueError(f'Ошибка при записи CSV: {ex}')
+    
+def csv_to_json(csv_path: str, json_path: str) -> None:
+    """
+    Преобразует CSV в JSON (список словарей).
+    Заголовок обязателен, значения сохраняются как строки.
+    json.dump(..., ensure_ascii=False, indent=2)
+    """
+    csv_file = Path(csv_path)
+    if not csv_file.exists():
+        raise FileNotFoundError(f'Файл CSV не найден')
+    with open(csv_path, 'r', encoding = 'utf-8') as csv_file:
+        line = csv_file.readline()
+        if not csv_file.strip():
+            raise FileNotFoundError(f'Файл CSV пустой')
+        reader = csv.DictReader(csv_file)
+        if reader.fieldnames == None:
+            raise ValueError(f'Файл CSV не содержит заголовков')
+        
+        data = []
+        for row in reader:
+            string_row = {}
+            for key, value in row.items():
+                string_row[key] = str(value)
+            data.append(string_row)
+            
+        if len(data) == 0:
+            raise ValueError(f'CSV файл не содержит данных, имеет только заголовки')
+    # запись JSON
+    try:
+        with open(json_path, 'w', encoding='utf-8') as json_file:
+            json.dump(data, json_file, ensure_ascii=False, indent=2) #запись данных в JSON формат (data =данные, json_file = файл куда идет запись
+            #ensure_ascii=False - разрешение русских букв (без \u0430\u0431), indent=2 - красивое форматирование с отступами )
+    except Exception as ex:
+        raise ValueError(f'Ошибка при записи JSON')
+    
+
+data = [{"name": "Alice", "age": 22}, {"name": "Bob", "age": 25}]
+path = Path("src.data/out/people.json")
+path.parent.mkdir(parents=True, exist_ok=True)
+
+with path.open("w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+with path.open(encoding="utf-8") as f:
+    loaded_data = json.load(f)
+print(loaded_data)
+
+rows = [
+    {"name": "Alice", "age": "22", "city": "SPB"},
+    {"name": "Bob", "age": "25", "city": "Moscow"}
+]
+with open("src.data/out/people.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=["name", "age", "city"])  
+    writer.writeheader()  
+    writer.writerows(rows)  
+with open("src.data/out/people.csv", encoding="utf-8") as f:
+    reader = csv.DictReader(f)  
+    for row in reader:
+        print(row)
+```
+### при выполнении этого кода создается файл JSON и CSV
+#### JSON
+![alt text](images\lab05\ex02.png) 
+#### CSV
+![alt text](images\lab05\ex01.png) 
+## Задание B — CSV → XLSX
+### код для задания с примером 3. CSV → XLSX через openpyxl
+```
+import csv
+from pathlib import Path
+import openpyxl
+from openpyxl.utils import get_column_letter
+
+def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
+    """
+    Конвертирует CSV в XLSX.
+    Использовать openpyxl ИЛИ xlsxwriter.
+    Первая строка CSV — заголовок.
+    Лист называется "Sheet1".
+    Колонки — автоширина по длине текста (не менее 8 символов).
+    """
+    csv_file = Path(csv_path)
+    if not csv_file.exists():
+        raise FileNotFoundError(f'CSV файл не найден')
+    if not csv_path.lower().endswith('.csv'):
+        raise ValueError(f'Файл должен иметь расширение csv')
+    try:
+        with open(csv_path, 'r', encoding='utf-8') as csv_file:
+            line = csv_file.readline()
+            if not line.strip():
+                raise ValueError('Пустой CSV файл')
+            reader = csv.reader(csv_file)
+            data = list(reader)
+    except UnicodeDecodeError:
+        raise ValueError(f'неправильная кодировка (должна быть UTF-8)')
+    except csv.Error:
+        raise ValueError(f'неправильный формат CSV файла')
+    except Exception as ex:
+        raise ValueError(f'Ошибка при чтении файла CSV: {ex}')
+    
+    if len(data) == 0:
+        raise ValueError("CSV файл не содержит данных")
+    if len(data) < 1:
+        raise ValueError("CSV файл не содержит заголовки")
+    
+    try:
+        work = openpyxl.Workbook()
+        sheet = work.active
+        title = 'Sheet1'
+        for row_idx, row_data in enumerate(data, 1):
+            for col_idx, cell_value in enumerate(row_data, 1):
+                sheet.cell(row=row_idx, column=col_idx, value=cell_value)
+        for col_idx in range(1, len(data[0]) + 1):
+            column_letter = get_column_letter(col_idx)
+            max_length = 8  # минимальная ширина колонок
+            for row in sheet[column_letter]:
+                if row.value:
+                    max_length = max(max_length, len(str(row.value)))
+            sheet.column_dimensions[column_letter].width = max_length + 2 # добавление отступов
+        work.save(xlsx_path)
+    except Exception as ex:
+        raise ValueError(f"Ошибка при создании XLSX файла: {ex}")
+    
+from openpyxl import Workbook
+import csv
+
+wb = Workbook()
+ws = wb.active
+ws.title = "Sheet1"
+output_dir = Path("src/data/out")
+output_dir.mkdir(parents=True, exist_ok=True)  
+
+with open("src/data/samples/people.csv", encoding="utf-8") as f:
+    reader = csv.reader(f)  
+    for row in reader:      
+        ws.append(row)      
+
+wb.save("src/data/out/people.xlsx")  
+```
+### при выполнении этого кода создается файл XLSX из формата CSV

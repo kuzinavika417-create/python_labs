@@ -1,0 +1,23 @@
+[
+  {
+    "age": "25",
+    "city": "Москва",
+    "country": "",
+    "email": "",
+    "name": "Иван"
+  },
+  {
+    "age": "30",
+    "city": "",
+    "country": "Россия",
+    "email": "",
+    "name": "Петр"
+  },
+  {
+    "age": "",
+    "city": "СПб",
+    "country": "",
+    "email": "maria@example.com",
+    "name": "Мария"
+  }
+]

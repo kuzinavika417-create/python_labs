@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Иван",
+    "age": 25,
+    "city": "Москва"
+  },
+  {
+    "name": "Петр",
+    "age": 30,
+    "country": "Россия"
+  },
+  {
+    "name": "Мария",
+    "city": "СПб",
+    "email": "maria@example.com"
+  }
+]
