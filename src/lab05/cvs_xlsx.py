@@ -3,7 +3,6 @@ from pathlib import Path
 import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl import Workbook
-import csv
 
 def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     """
@@ -19,11 +18,12 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     if not csv_path.lower().endswith('.csv'):
         raise ValueError(f'Файл должен иметь расширение csv')
     try:
-        with open(csv_path, 'r', encoding='utf-8') as csv_file:
-            line = csv_file.readline()
+        with open(csv_path, 'r', encoding='utf-8') as f:
+            line = f.readline()
             if not line.strip():
                 raise ValueError('Пустой CSV файл')
-            reader = csv.reader(csv_file)
+            f.seek(0)  # Возвращаемся в начало файла
+            reader = csv.reader(f)
             data = list(reader)
     except UnicodeDecodeError:
         raise ValueError(f'неправильная кодировка (должна быть UTF-8)')
@@ -54,17 +54,3 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         work.save(xlsx_path)
     except Exception as ex:
         raise ValueError(f"Ошибка при создании XLSX файла: {ex}")
-
-wb = Workbook()
-ws = wb.active
-ws.title = "Sheet1"
-output_dir = Path("src/data/out")
-output_dir.mkdir(parents=True, exist_ok=True)  
-
-with open("src/data/samples/people.csv", encoding="utf-8") as f:
-    reader = csv.reader(f)  
-    for row in reader:      
-        ws.append(row)      
-
-wb.save("src/data/out/people.xlsx")  
-csv_to_xlsx("src/data/samples/people.csv", "src/data/out/people.xlsx")
