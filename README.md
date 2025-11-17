@@ -1,4 +1,177 @@
 # python_labs
+# Лабораторная работа 6
+1. **cli_text.py** — утилиты для работы с текстом (cat и stats)
+2. **cli_convert.py** — конвертеры данных (JSON/CSV/XLSX)
+## Модуль cli_text.py
+
+### Команда `cat`
+
+Выводит содержимое файла построчно с опциональной нумерацией строк.
+
+**Синтаксис:**
+```bash
+python -m src.lab06.cli_text cat --input <путь> [-n]
+```
+
+**Параметры:**
+- `--input` (обязательный) — путь к входному файлу
+- `-n` (опциональный) — нумеровать строки
+
+**Примеры:**
+```bash
+# Вывод файла без нумерации
+python -m src.lab06.cli_text cat --input data/samples/people.csv
+
+# Вывод файла с нумерацией строк
+python -m src.lab06.cli_text cat --input data/samples/people.csv -n
+```
+
+**Пример вывода:**
+```
+     1	name,age,city
+     2	Alice,22,SPB
+     3	Bob,25,Moscow
+```
+
+### Команда `stats`
+
+Анализирует частоты слов в тексте и выводит статистику.
+
+**Синтаксис:**
+```bash
+python -m src.lab06.cli_text stats --input <путь> [--top N]
+```
+
+**Параметры:**
+- `--input` (обязательный) — путь к текстовому файлу
+- `--top` (опциональный) — количество топ-слов для вывода (по умолчанию 5)
+
+**Примеры:**
+```bash
+# Анализ с топ-5 словами (по умолчанию)
+python -m src.lab06.cli_text stats --input data/samples/people.txt
+
+# Анализ с топ-10 словами
+python -m src.lab06.cli_text stats --input data/samples/people.txt --top 10
+```
+
+**Пример вывода:**
+```
+Всего слов: 15
+Уникальных слов: 8
+Топ-5:
+  привет: 3
+  мир: 2
+  это: 2
+  тест: 1
+  текст: 1
+```
+
+## Модуль cli_convert.py
+
+### Команда `json_csv`
+
+Конвертирует JSON-файл в CSV формат.
+
+**Синтаксис:**
+```bash
+python -m src.lab06.cli_convert json2csv --in <входной_файл> --out <выходной_файл>
+```
+
+**Параметры:**
+- `--in` (обязательный) — путь к входному JSON файлу
+- `--out` (обязательный) — путь к выходному CSV файлу
+
+**Пример:**
+```bash
+python -m src.lab06.cli_convert json2csv --in data/samples/people.json --out data/out/people.csv
+```
+
+**Пример вывода:**
+```
+Успешно: data/samples/people.json → data/out/people.csv
+```
+
+### Команда `csv_json`
+
+Конвертирует CSV-файл в JSON формат.
+
+**Синтаксис:**
+```bash
+python -m src.lab06.cli_convert csv2json --in <входной_файл> --out <выходной_файл>
+```
+
+**Параметры:**
+- `--in` (обязательный) — путь к входному CSV файлу
+- `--out` (обязательный) — путь к выходному JSON файлу
+
+**Пример:**
+```bash
+python -m src.lab06.cli_convert csv2json --in data/samples/people.csv --out data/out/people.json
+```
+
+**Пример вывода:**
+```
+Успешно: data/samples/people.csv → data/out/people.json
+```
+
+### Команда `csv_xlsx`
+
+Конвертирует CSV-файл в XLSX формат.
+
+**Синтаксис:**
+```bash
+python -m src.lab06.cli_convert csv2xlsx --in <входной_файл> --out <выходной_файл>
+```
+
+**Параметры:**
+- `--in` (обязательный) — путь к входному CSV файлу
+- `--out` (обязательный) — путь к выходному XLSX файлу
+
+**Пример:**
+```bash
+python -m src.lab06.cli_convert csv2xlsx --in data/samples/people.csv --out data/out/people.xlsx
+```
+
+**Пример вывода:**
+```
+Успешно: data/samples/people.csv → data/out/people.xlsx
+```
+
+**Справка:**
+```bash
+python -m src.lab06.cli_convert --help
+python -m src.lab06.cli_convert json2csv --help
+python -m src.lab06.cli_convert csv2json --help
+python -m src.lab06.cli_convert csv2xlsx --help
+```
+
+### 1. Проверка команды cat
+
+```bash
+# Вывод CSV файла с нумерацией
+python -m src.lab06.cli_text cat --input data/samples/people.csv -n
+```
+
+**Результат:** Вывод содержимого файла с номерами строк.
+
+### 2. Проверка команды stats
+
+```bash
+# Анализ текстового файла
+python -m src.lab06.cli_text stats --input data/samples/people.txt --top 5
+```
+
+**Результат:** Статистика по словам с топ-5 наиболее частыми словами.
+
+## Примечания
+
+- Все функции конвертации используют модули из `lab05`
+- Для работы `csv2xlsx` требуется библиотека `openpyxl` (используется в lab05)
+- Выходные файлы сохраняются в `data/out/` (директория создается автоматически)
+- Все файлы обрабатываются в кодировке UTF-8
+
+
 ## Задание 1
 ```
 name = input(f'Введите имя:')
@@ -529,3 +702,4 @@ wb.save("src/data/out/people.xlsx")
 csv_to_xlsx("src/data/samples/people.csv", "src/data/out/people.xlsx") 
 ```
 ### при выполнении этого кода создается файл XLSX из формата CSV
+
