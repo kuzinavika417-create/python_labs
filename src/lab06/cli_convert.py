@@ -29,7 +29,6 @@ def main():
     
     input_path_str = normalize_path(args.input)
     output_path_str = normalize_path(args.output)
-    
     input_path = Path(input_path_str)
     output_path = Path(output_path_str)
     
