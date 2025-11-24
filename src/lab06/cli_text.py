@@ -1,17 +1,10 @@
-import argparse
 import sys
-import os
 from pathlib import Path
-lab06_dir = Path(__file__).parent
-project_root = lab06_dir.parent
 
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+src_path = Path(__file__).parent.parent
+sys.path.append(str(src_path))
 
-pythonpath = os.environ.get('PYTHONPATH', '')
-if str(project_root) not in pythonpath.split(os.pathsep):
-    os.environ['PYTHONPATH'] = str(project_root) + (os.pathsep + pythonpath if pythonpath else '')
-
+import argparse
 from lib.text import normalize, tokenize, count_freq, top_n
 
 def cmd_cat(input_path: str, number_lines: bool = False) -> None:
@@ -82,30 +75,37 @@ def cmd_stats(input_path: str, top: int = 5) -> None:
     print(f"Топ-{top}:")
     for word, count in top_words:
         print(f"  {word}: {count}")
-
-
+        
 def main():
     parser = argparse.ArgumentParser(description="CLI-утилиты для работы с текстом (cat/stats)")
-    parser.add_argument("--input",required=True,help="Путь к входному файлу")
-    parser.add_argument("-n",action="store_true",help="Нумеровать строки (для команды cat)")
-    parser.add_argument("--top",type=int,default=None,help="Количество топ-слов для вывода (если указан, выполняется stats)")
-    
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    cat_parser = subparsers.add_parser("cat", help="Вывести содержимое файла")
+    cat_parser.add_argument("--input", required=True, help="Путь к входному файлу")
+    cat_parser.add_argument("-n", action="store_true", help="Нумеровать строки (для команды cat)")
+    cat_parser.set_defaults(func=lambda args: cmd_cat(args.input, args.n))
+
+    stats_parser = subparsers.add_parser("stats", help="Вывести статистику по словам")
+    stats_parser.add_argument("--input", required=True, help="Путь к входному файлу")
+    stats_parser.add_argument("--top", type=int, default=None,help="Количество топ-слов для вывода (если указан, выполняется stats)")
+
+    def run_stats(args):
+        if args.top < 1:
+            stats_parser.error("--top должен быть положительным числом")
+        cmd_stats(args.input, args.top)
+
+    stats_parser.set_defaults(func=run_stats)
+
     args = parser.parse_args()
-    
+
     try:
-        if args.top is not None:
-            if args.top < 1:
-                parser.error("--top должен быть положительным числом")
-            cmd_stats(args.input, args.top)
-        else:
-            cmd_cat(args.input, args.n)
+        args.func(args)
     except FileNotFoundError as e:
         print(f"Ошибка: {e}", file=sys.stderr)
         sys.exit(1)
     except Exception as e:
         print(f"Ошибка: {e}", file=sys.stderr)
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()
