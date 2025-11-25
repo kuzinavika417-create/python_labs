@@ -1,6 +1,6 @@
 m = int(input("Минуты :"))
-day = m //(60*24)
-daymin = m % (60*24)
+day = m // (60 * 24)
+daymin = m % (60 * 24)
 hour = daymin // 60
 minute = daymin % 60
 if day > 0:

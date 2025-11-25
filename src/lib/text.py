@@ -1,38 +1,29 @@
 def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
     if not text:
-        return ''
-    for i in '\t\r\n\v\f':
-        text = text.replace(i,' ')
-    while '  ' in text:
-        text = text.replace('  ', ' ')
-    text = text.strip()
+        return ""
     if yo2e:
-        text = text.replace('ё', 'е').replace('Ё', 'Е')
+        text = text.replace("ё", "е").replace("Ё", "Е")
     if casefold:
-        text.casefold()
-    return text
+        text = text.casefold()
+    return " ".join(text.split())
+
+
+import re
+
 
 def tokenize(text: str) -> list[str]:
-    text = normalize(text, casefold=False, yo2e=False)
-    words = []
-    results = []
-    for i in text:
-        if i.isalnum() or i == '_' or i == '-' in words:
-            words.append(i)
-        elif words:
-            results.append(''.join(words))
-            words = []
-    if words:
-        results.append(''.join(words))
-    return results
+    return re.findall(r"\w+(?:-\w+)*", text)
+
 
 def count_freq(tokens: list[str]) -> dict[str, int]:
-    alf = list(sorted(set(tokens)))
-    f = {}
-    for i in alf:
-        f[i] = tokens.count(i)
-    return f
+    if not tokens:
+        return {}
+    freq_dict = {}
+    for token in tokens:
+        freq_dict[token] = freq_dict.get(token, 0) + 1
+    return freq_dict
+
 
 def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
-    sort = sorted(freq.items(), key=lambda i: (-i[1], i[0]))
-    return sort[:n]
+    sorted_items = sorted(freq.items(), key=lambda item: (-item[1], item[0]))
+    return sorted_items[:n]

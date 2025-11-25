@@ -2,6 +2,7 @@ import json
 import csv
 from pathlib import Path
 
+
 def json_to_csv(json_path: str, csv_path: str) -> None:
     """
     Преобразует JSON-файл в CSV.
@@ -11,33 +12,34 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
     json_file_path = Path(json_path)
     if not json_file_path.exists():
         raise FileNotFoundError(f"JSON файл отсутствует: {json_path}")
-    
-    with open(json_path, 'r', encoding='utf-8') as f:
+
+    with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    
+
     if not isinstance(data, list):
-        raise ValueError('Неверный тип данных')
+        raise ValueError("Неверный тип данных")
     if len(data) == 0:
-        raise ValueError('Пустой файл JSON')
-    
+        raise ValueError("Пустой файл JSON")
+
     all_keys = set()
     for i in data:
         if not isinstance(i, dict):
-            raise ValueError('Элементы должны быть словарями')
+            raise ValueError("Элементы должны быть словарями")
         all_keys.update(i.keys())
-    
+
     col = sorted(all_keys)
-    
+
     try:
-        with open(csv_path, 'w', encoding='utf-8', newline='') as f:
+        with open(csv_path, "w", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=col)
             writer.writeheader()
             for i in data:
-                row = {r: i.get(r, '') for r in col}
+                row = {r: i.get(r, "") for r in col}
                 writer.writerow(row)
     except Exception as ex:
-        raise ValueError(f'Ошибка при записи CSV: {ex}')
-    
+        raise ValueError(f"Ошибка при записи CSV: {ex}")
+
+
 def csv_to_json(csv_path: str, json_path: str) -> None:
     """
     Преобразует CSV в JSON (список словарей).
@@ -46,34 +48,36 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
     """
     csv_file_path = Path(csv_path)
     if not csv_file_path.exists():
-        raise FileNotFoundError(f'Файл CSV не найден: {csv_path}')
-    
-    with open(csv_path, 'r', encoding='utf-8') as f:
+        # ИСПРАВЛЕНИЕ 1: Для несуществующего файла - FileNotFoundError
+        raise FileNotFoundError(f"Файл CSV не найден: {csv_path}")
+
+    with open(csv_path, "r", encoding="utf-8") as f:
         first_line = f.readline()
         if not first_line.strip():
-            raise FileNotFoundError(f'Файл CSV пустой: {csv_path}')
+            # ИСПРАВЛЕНИЕ 2: Для пустого файла - ValueError
+            raise ValueError(f"Файл CSV пустой: {csv_path}")
         f.seek(0)  # Возвращаемся в начало файла
         reader = csv.DictReader(f)
         if reader.fieldnames is None:
-            raise ValueError(f'Файл CSV не содержит заголовков')
-        
+            raise ValueError(f"Файл CSV не содержит заголовков")
+
         data = []
         for row in reader:
             string_row = {}
             for key, value in row.items():
                 string_row[key] = str(value)
             data.append(string_row)
-            
+
         if len(data) == 0:
-            raise ValueError(f'CSV файл не содержит данных, имеет только заголовки')
-    
+            raise ValueError(f"CSV файл не содержит данных, имеет только заголовки")
+
     # запись JSON
     try:
-        with open(json_path, 'w', encoding='utf-8') as json_file:
+        with open(json_path, "w", encoding="utf-8") as json_file:
             json.dump(data, json_file, ensure_ascii=False, indent=2)
     except Exception as ex:
-        raise ValueError(f'Ошибка при записи JSON: {ex}')
-    
+        raise ValueError(f"Ошибка при записи JSON: {ex}")
+
 
 # data = [{"name": "Alice", "age": 22}, {"name": "Bob", "age": 25}]
 # path = Path("src.data/out/people.json")
@@ -91,10 +95,10 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
 #     {"name": "Bob", "age": "25", "city": "Moscow"}
 # ]
 # with open("src.data/out/people.csv", "w", newline="", encoding="utf-8") as f:
-#     writer = csv.DictWriter(f, fieldnames=["name", "age", "city"])  
-#     writer.writeheader()  
-#     writer.writerows(rows)  
+#     writer = csv.DictWriter(f, fieldnames=["name", "age", "city"])
+#     writer.writeheader()
+#     writer.writerows(rows)
 # with open("src.data/out/people.csv", encoding="utf-8") as f:
-#     reader = csv.DictReader(f)  
+#     reader = csv.DictReader(f)
 #     for row in reader:
 #         print(row)
