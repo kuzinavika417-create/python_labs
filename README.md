@@ -320,9 +320,8 @@ cd C:\Users\Виктория\OneDrive\Desktop\python_labs\src
 
 Затем запуск команд
 ```
-python -m lab06.cli_text --input data/samples/people.csv -n
-python -m lab06.cli_text --input data/samples/people.txt --top 5
-python -m lab06.cli_convert --in data/samples/people.json --out 
+python -m lab06.cli_text cat --input data/samples/people.csv -n 
+python -m lab06.cli_text stats --input data/samples/people.csv --top 5
 ```
 
 
