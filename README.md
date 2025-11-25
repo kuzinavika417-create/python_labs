@@ -1,6 +1,6 @@
 # python_labs
 # Лабораторная работа 7
-## Задаание А 
+## Задание А 
 ```import pytest
 from src.lib.text import normalize, tokenize, count_freq, top_n
 import sys
@@ -135,6 +135,12 @@ def test_csv_to_json_raises_file_not_found_error():
         csv_to_json("1111.csv", "out.json")
  ```
  ### Что выводят эти два кода:
+``` 
+python -m pytest tests/test_json_csv.py -v 
+```
+```
+python -m pytest tests/test_text.py -v
+```
  ![alt.text/](images\lab07\im02.png)
 ![alt.text/](images\lab07\im03.png)
 
