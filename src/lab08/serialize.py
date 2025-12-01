@@ -1,6 +1,6 @@
 import json
 from typing import List
-from models import Student
+from lab08.models import Student
 
 def students_to_json(students: List[Student], path: str) -> None:
     data = [student.to_dict() for student in students]
