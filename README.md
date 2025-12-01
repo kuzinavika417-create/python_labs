@@ -141,7 +141,7 @@ python -m pytest tests/test_json_csv.py -v
 ```
 python -m pytest tests/test_text.py -v
 ```
- ![alt.text/](images\lab07\im02.png)
+![alt.text/](images\lab07\im02.png)
 ![alt.text/](images\lab07\im03.png)
 
 ### Функция **black .**:
