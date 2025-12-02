@@ -31,7 +31,7 @@ def students_from_json(path: str) -> List[Student]:
         return []
 
 if __name__ == "__main__":
-    input_path = "../../data/lab08/students_input.json"
+    input_path = "data/lab08/students_input.json"
     students = students_from_json(input_path)
     if students:
         print(f"Успешно загружено {len(students)} студентов:\n")

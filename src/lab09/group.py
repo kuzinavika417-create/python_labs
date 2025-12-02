@@ -173,10 +173,9 @@ if __name__ == "__main__":
     
     # статистика:
     stats = group.stats()
-    print(f"\nСтатистика:")
-    print(f"  Всего студентов: {stats['count']}")
-    print(f"  Средний GPA: {stats['avg_gpa']:.2f}")
-    print(f"  Минимальный GPA: {stats['min_gpa']}")
-    print(f"  Максимальный GPA: {stats['max_gpa']}")
-    print(f"  Распределение по группам: {stats['groups']}")
-    print(f"  Топ-5 студентов: {stats['top_5']}")
+    print(f"count: {stats['count']}")
+    print(f"avg_gpa: {stats['avg_gpa']:.2f}")
+    print(f"min_gpa: {stats['min_gpa']}")
+    print(f"max_gpa: {stats['max_gpa']}")
+    print(f"groups: {stats['groups']}")
+    print(f"top_5_students: {stats['top_5']}")
