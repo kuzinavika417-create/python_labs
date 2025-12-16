@@ -157,25 +157,30 @@ if __name__ == "__main__":
     group = Group("data/students.csv")
     from lab08.models import Student
     
-    student1 = Student(  
-        fio="Иванов Иван Иванович",
-        birthdate="2000-05-15",
-        group="ИТ-101",
-        gpa=4.5
-    )
+    # student1 = Student(  
+    #     fio="Иванов Иван Иванович",
+    #     birthdate="2000-05-15",
+    #     group="ИТ-101",
+    #     gpa=4.5
+    # )
     
-    # добавление студента через add()
-    group.add(student1)
+    # # добавление студента через add()
+    # group.add(student1)
+    group.remove("Иванов Иван Иванович")
     
     # все сдуденты:
     all_students = group.list()
-    print(f"Всего студентов: {len(all_students)}")
+    for student in all_students:
+        print(student)
+        
     
-    # статистика:
-    stats = group.stats()
-    print(f"count: {stats['count']}")
-    print(f"avg_gpa: {stats['avg_gpa']:.2f}")
-    print(f"min_gpa: {stats['min_gpa']}")
-    print(f"max_gpa: {stats['max_gpa']}")
-    print(f"groups: {stats['groups']}")
-    print(f"top_5_students: {stats['top_5']}")
+    # print(f"Всего студентов: {len(all_students)}")
+    
+    # # статистика:
+    # stats = group.stats()
+    # print(f"count: {stats['count']}")
+    # print(f"avg_gpa: {stats['avg_gpa']:.2f}")
+    # print(f"min_gpa: {stats['min_gpa']}")
+    # print(f"max_gpa: {stats['max_gpa']}")
+    # print(f"groups: {stats['groups']}")
+    # print(f"top_5_students: {stats['top_5']}")
